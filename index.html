@@ -216,16 +216,16 @@ dialog form{display:grid;gap:12px;padding:20px}
     </svg>
   </div>
   <div class="suelo"><div class="wrap cifras">
-    <div><b>297</b><span>fotografías aéreas del 11 de noviembre de 2026</span></div>
+    <div><b>188</b><span>especies registradas de 17 grupos</span></div>
     <div><b>0.66 km²</b><span>levantados con dron en 3D</span></div>
     <div><b>95 m</b><span>de desnivel, de 1&#8239;888 a 1&#8239;983&nbsp;m</span></div>
     <div><b>3.3 cm</b><span>por píxel en la foto aérea</span></div>
   </div></div>
   <div class="band"><div class="wrap cols">
     <div><h3>Qué es</h3><p>Un bosque formalizado para generar conocimiento científico, enseñar y conservar. Se recorre por senderos, con la menor intervención posible, para observar sin alterar a la flora y la fauna.</p></div>
-    <div><h3>Quién vive aquí</h3><p>Matorral y bosque de la ladera, con plantas como el copal o palo xixote (<i>Bursera fagaroides</i>) y fauna como el cacomixtle, que da nombre al bosque, y la zorra gris. El repositorio reúne los estudios hechos aquí.</p></div>
+    <div><h3>Quién vive aquí</h3><p>Se han registrado 188 especies de 17 grupos: plantas, insectos, reptiles, aves y mamíferos, entre ellas el copal o palo xixote (<i>Bursera fagaroides</i>). Las cámaras trampa han captado cacomixtles, que dan nombre al bosque, y zorras grises.</p></div>
     <div><h3>Dónde está</h3><p>Camino a la Presa San José, al poniente de la ciudad de San Luis Potosí. Centro aproximado: 22.1479° N, 101.0311° O (WGS 84, UTM 14 N).</p></div>
-  </div><p class="nota wrap" style="margin-top:14px">Cifras y relieve: levantamiento fotogramétrico con dron del 11 de noviembre de 2026 (Laboratorio de Paisajes Antrópicos Sostenibles).</p></div>
+  </div><p class="nota wrap" style="margin-top:14px">Biodiversidad y cámaras trampa: Dr. Fredy Alvarado, Laboratorio de Paisajes Antrópicos Sostenibles (IPICYT). Relieve: levantamiento fotogramétrico con dron del 11 de noviembre de 2026.</p></div>
   <div class="band" style="padding-top:0"><div class="wrap sello">
     <div class="logos">
       <a class="lpas" href="https://www.instagram.com/lpas.ipicyt.mx/"><img src="img/logo-lpas.png" alt="Logo del Laboratorio de Paisajes Antrópicos Sostenibles" width="120" height="120"></a>
@@ -472,7 +472,7 @@ function pintarAnuncios(lista){const hoy=new Date().toISOString().slice(0,10);
 
 /* ---------- Kids ---------- */
 const ANIMALES={cacomixtle:{n:'Cacomixtle',vb:'-130 -80 270 84',dato:'Es nocturno y su cola tiene anillos. Es pariente del mapache, no de los gatos. ¡Este bosque lleva su nombre!'},
-  zorra:{n:'Zorra gris',vb:'-4 -116 232 120',dato:'Es de los pocos parientes del perro que pueden trepar a los árboles.'},
+  zorra:{n:'Zorra gris',vb:'-4 -116 232 120',dato:'Es de los pocos parientes del perro que pueden trepar a los árboles. Las cámaras del bosque la han fotografiado.'},
   colibri:{n:'Colibrí',vb:'-44 -58 100 80',dato:'Mueve sus alas decenas de veces por segundo y, al beber néctar, lleva polen de flor en flor.'},
   correcaminos:{n:'Correcaminos',vb:'-46 -100 168 104',dato:'Prefiere correr que volar: puede alcanzar unos 30 km/h.'}};
 const sil=(k,cls='')=>{const[,, w,h]=ANIMALES[k].vb.split(' ');return `<svg viewBox="0 0 ${w} ${h}" fill="currentColor" class="${cls}" aria-hidden="true"><use href="#${k}" width="${w}" height="${h}"/></svg>`};
