@@ -9,7 +9,8 @@
  "sur": 2450165.1389999995,
  "epsg": 32614,
  "zona_utm": 14,
- "altitud_min": 1888.46,
- "altitud_max": 1983.38,
- "codificacion": "PNG RGB: altura en cm sobre altitud_min = R*256 + G; R=G=255 significa sin dato"
+ "altitud_min": 1889.61,
+ "altitud_max": 1983.17,
+ "codificacion": "PNG RGB: altura en cm sobre altitud_min = R*256 + G; R=G=255 significa sin dato",
+ "suavizado": "mediana 3x3"
 }

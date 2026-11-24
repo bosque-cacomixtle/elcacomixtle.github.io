@@ -5,16 +5,56 @@
 "autores": "Ramírez Carrizales, Armando Rayel",
 "anio": 2026,
 "tipo": "Investigación en curso",
-"resumen": "Estudio sobre las preferencias de las hormigas acarreadoras en el Bosque Escuela. Los puntos de observación se marcan en el mapa 3D a partir de fotografías georreferenciadas tomadas en campo.",
+"resumen": "Estudio sobre las preferencias de las hormigas acarreadoras (cortadoras de hoja) en el Bosque Escuela. Los hormigueros se ubicaron con el GPS de fotografías y video de campo (2, 11 y 15 de noviembre de 2026); cuando varias fotos eran del mismo hormiguero, su posición se promedió ponderando la precisión de cada lectura. El círculo alrededor de cada punto indica la incertidumbre estimada.",
 "doi": "",
 "enlace": "",
 "sitios": [
 {
+"E": 290801.2,
+"N": 2450873.4,
+"precision": 2.0,
+"nombre": "Hormiguero H1",
+"nota": "2 nov 2026, 9:13 h. Ubicación promediada de 4 fotos (IMG_7497, 7501–7503), ponderada por la precisión GPS de cada una.",
+"foto": "fotos/hormigas/IMG_7497.jpg"
+},
+{
+"E": 290657.4,
+"N": 2450688.0,
+"precision": 5.7,
+"nombre": "Hormiguero H2",
+"nota": "2 nov 2026, 10:51–10:53 h. Ubicación promediada de 6 fotos (IMG_7562–7575), ponderada por la precisión GPS de cada una.",
+"foto": "fotos/hormigas/IMG_7575.jpg"
+},
+{
+"E": 290717.9,
+"N": 2450804.7,
+"precision": 34.1,
+"nombre": "Hormiguero H3",
+"nota": "2 nov 2026, 10:57 h. Ubicación promediada de 1 foto (IMG_7578), ponderada por la precisión GPS de cada una.",
+"foto": "fotos/hormigas/IMG_7578.jpg"
+},
+{
+"E": 290469.2,
+"N": 2450565.9,
+"precision": 8.4,
+"nombre": "Hormiguero H4",
+"nota": "11 nov 2026, 12:01 h. Ubicación promediada de 2 fotos (IMG_8023, 8024), ponderada por la precisión GPS de cada una.",
+"foto": "fotos/hormigas/IMG_8023.jpg"
+},
+{
+"E": 290535.7,
+"N": 2450353.7,
+"precision": 57.9,
+"nombre": "Hormiguero H5",
+"nota": "11 nov 2026, 12:35 h. Ubicación promediada de 1 foto (IMG_8028), ponderada por la precisión GPS de cada una.",
+"foto": "fotos/hormigas/IMG_8028.jpg"
+},
+{
 "E": 290598.1,
 "N": 2450718.6,
-"nombre": "Hormiguero H1",
-"fecha": "2026-11-15",
-"nota": "Ubicación tomada del video de campo del 15 de noviembre de 2026 (GPS del iPhone, precisión horizontal reportada ±31 m). Las fotos de campo no conservaron su ubicación.",
+"precision": 31.5,
+"nombre": "Hormiguero H6 (video)",
+"nota": "15 nov 2026, 8:43 h. Ubicación del GPS del video IMG_8066 (a 67 m de H2; con ±31 m de error podría ser el mismo hormiguero).",
 "video": "fotos/hormigas/h1.mp4",
 "foto": "fotos/hormigas/h1.jpg"
 }
