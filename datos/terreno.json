@@ -1,0 +1,15 @@
+{
+ "ancho": 1025,
+ "alto": 860,
+ "celda_x": 1.0003414634146115,
+ "celda_y": 0.9996511627903728,
+ "oeste": 290026.56,
+ "norte": 2451024.838999999,
+ "este": 291051.91,
+ "sur": 2450165.1389999995,
+ "epsg": 32614,
+ "zona_utm": 14,
+ "altitud_min": 1888.46,
+ "altitud_max": 1983.38,
+ "codificacion": "PNG RGB: altura en cm sobre altitud_min = R*256 + G; R=G=255 significa sin dato"
+}

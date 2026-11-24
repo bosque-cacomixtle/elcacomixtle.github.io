@@ -1,0 +1,3 @@
+[
+{"id":"levantamiento-dron-2026-11-11","titulo":"Levantamiento fotogramétrico con dron del Bosque Escuela","autores":"","anio":2026,"tipo":"Datos y cartografía","resumen":"Vuelo del 11 de noviembre de 2026 (13:39–14:21 h) con cámara DJI FC3682: 298 fotografías, 297 reconstruidas, GSD promedio de 3.33 cm y 0.66 km² cubiertos. Procesado con ODX 3.8.5. Productos: ortofoto, modelo digital de superficie (DSM), nube de puntos LAS y modelo 3D texturizado (GLB). Georreferencia solo con GPS del dron: precisión absoluta CE90 de 0.96 m (horizontal) y LE90 de 5.03 m (vertical). Es la base del mapa 3D de este sitio.","doi":"","enlace":"","sitio":null}
+]
