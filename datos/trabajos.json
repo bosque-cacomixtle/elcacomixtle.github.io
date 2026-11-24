@@ -4,8 +4,8 @@
 "titulo": "Preferencias de hormigas acarreadoras en el Bosque Escuela El Cacomixtle",
 "autores": "Ramírez Carrizales, Armando Rayel",
 "anio": 2026,
-"tipo": "Investigación en curso",
-"resumen": "Estudio sobre las preferencias de las hormigas acarreadoras (cortadoras de hoja) en el Bosque Escuela. Los hormigueros se ubicaron con el GPS de fotografías y video de campo (2 y 11 de noviembre de 2026, y un video del 15 de noviembre); cuando varias fotos eran del mismo hormiguero, su posición se promedió ponderando la precisión de cada lectura. El círculo alrededor de cada punto indica la incertidumbre estimada.",
+"tipo": "Trabajo en curso",
+"resumen": "Evalúa si la hormiga arriera Atta mexicana selecciona plantas con mayor contenido de humedad foliar en el ambiente semiárido del Bosque Escuela. En cinco hormigueros se recolectan hojas de cinco plantas acarreadas por las hormigas y de la planta vecina no acarreada más cercana a cada una (25 pares), y se determina su porcentaje de humedad a partir del peso fresco y el peso seco. Los hormigueros se ubicaron con el GPS de fotografías y video de campo; el círculo alrededor de cada punto indica la incertidumbre estimada. Resultados pendientes.",
 "doi": "",
 "enlace": "",
 "sitios": [
@@ -107,6 +107,19 @@
 {
 "src": "fotos/hormigas/IMG_8028.jpg",
 "pie": "IMG_8028"
+}
+],
+"subtitulo": "Selección de plantas por Atta mexicana en función de la humedad foliar en el Bosque Escuela “El Cacomixtle”, San Luis Potosí",
+"estado": "Trabajo en curso",
+"curso": "Maestría en Ciencias Ambientales, IPICYT · Curso: Diseño de estudios ecológicos y metodologías de campo y laboratorio en ecología · Docente: Dr. Fredy Alvarado",
+"archivos": [
+{
+"src": "docs/Atta_mexicana_humedad_foliar_Ramirez-Carrizales_EN_PROCESO.pdf",
+"etq": "Ver documento (PDF)"
+},
+{
+"src": "docs/Atta_mexicana_humedad_foliar_Ramirez-Carrizales_EN_PROCESO.docx",
+"etq": "Descargar Word"
 }
 ]
 },
