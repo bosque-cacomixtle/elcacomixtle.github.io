@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Bosque Escuela El Cacomixtle</title>
 <link rel="icon" href="img/logo-lpas.png">
+<link rel="stylesheet" href="lib/leaflet.css">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -77,6 +78,9 @@ nav a.kids{color:var(--sol)}
 #v-mapa{display:grid;grid-template-columns:minmax(0,1fr) 330px;height:calc(100dvh - 62px);min-height:520px}
 .lienzo{position:relative;background:linear-gradient(light-dark(#cdeee9,#0b1a1c),light-dark(#f2fbf9,#11201f));overflow:hidden;touch-action:none}
 .lienzo canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+#v-mapa .lienzo[hidden],.solo3d[hidden]{display:none!important}
+#mapa2d{background:#fff}#mapa2d .leaflet-control-attribution{font-size:11px}
+.pin2d{background:none;border:0}.pin2d i{display:block;width:26px;height:26px;margin:-34px 0 0 -13px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:var(--coral);border:2px solid #fff;box-shadow:0 2px 6px #0006}.pin2d.sel i{outline:3px solid #fff;outline-offset:2px}
 #estado[hidden]{display:none}#estado{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:20px;font-weight:700;color:var(--mute)}
 #pines{position:absolute;inset:0;pointer-events:none}
 .pin{position:absolute;left:0;top:0;pointer-events:auto;transform-origin:0 0;border:0;padding:0;background:none;min-height:0;cursor:pointer}
@@ -248,6 +252,7 @@ dialog form{display:grid;gap:12px;padding:20px}
 
 <!-- ========== MAPA 3D ========== -->
 <section id="v-mapa" class="vista" hidden>
+  <div class="lienzo" id="mapa2d" hidden></div>
   <div class="lienzo" id="lienzo">
     <div id="estado">Cargando el relieve…</div>
     <div id="pines"></div>
@@ -257,17 +262,17 @@ dialog form{display:grid;gap:12px;padding:20px}
   </div>
   <aside>
     <div>
+      <h3>Vista</h3>
+      <div class="seg" role="group" aria-label="Tipo de mapa"><button type="button" data-vista="3d" aria-pressed="true">Relieve 3D</button><button type="button" data-vista="2d" aria-pressed="false">Ortofoto 2D</button></div>
+    </div>
+    <div class="solo3d">
       <h3>Superficie</h3>
       <div class="seg" role="group" aria-label="Tipo de superficie">
         <button type="button" data-modo="orto" aria-pressed="true">Ortofoto</button><button type="button" data-modo="hipso" aria-pressed="false">Altitud</button><button type="button" data-modo="relieve" aria-pressed="false">Relieve</button>
       </div>
       <div id="leyenda" hidden style="margin-top:10px"><div class="rampa"></div><div><span id="lmin"></span><span>m s.n.m.</span><span id="lmax"></span></div></div>
     </div>
-    <div>
-      <label for="exag">Exageración vertical: <span id="exag-v">2×</span></label>
-      <input type="range" id="exag" min="1" max="4" step="0.5" value="2">
-    </div>
-    <div class="fila">
+    <div class="fila solo3d">
       <button type="button" id="b-inicial">Vista inicial</button><button type="button" id="b-cenital">Vista cenital</button><button type="button" id="b-girar" aria-pressed="false">Girar</button><button type="button" id="b-curvas" aria-pressed="false">Curvas de nivel</button>
     </div>
     <div>
@@ -275,7 +280,7 @@ dialog form{display:grid;gap:12px;padding:20px}
       <ul id="lista-sitios"></ul>
       <div id="ficha" hidden></div>
     </div>
-    <div>
+    <div class="solo3d">
       <h3>Registrar un sitio</h3>
       <p class="nota" style="margin:0 0 8px">Activa el modo y haz clic sobre el terreno. El sitio se guarda solo en este navegador como borrador; copia el JSON y pégalo en <code>datos/trabajos.json</code> para publicarlo.</p>
       <div class="fila"><button type="button" id="b-registrar" aria-pressed="false">Registrar sitio</button><button type="button" id="b-copiar">Copiar JSON</button><button type="button" id="b-borrar">Borrar borradores</button></div>
@@ -402,6 +407,7 @@ dialog form{display:grid;gap:12px;padding:20px}
 
 <script src="lib/three.min.js"></script>
 <script src="lib/OrbitControls.js"></script>
+<script src="lib/leaflet.js"></script>
 <script>
 {
 const $=s=>document.querySelector(s);
@@ -432,7 +438,7 @@ const fotoOK=f=>/^https?:\/\//.test(f)||/^[\w\-./]+\.(jpe?g|png|webp)$/i.test(f)
 const puntos=t=>(Array.isArray(t.sitios)?t.sitios:(t.sitio?[t.sitio]:[])).map((p,i)=>{const u=sitioUTM(p);return u?{E:u[0],N:u[1],nombre:String(p.nombre||''),foto:fotoOK(String(p.foto||''))?String(p.foto):'',video:/^[\w\-./]+\.mp4$/i.test(String(p.video||''))&&!String(p.video).includes('..')?String(p.video):'',nota:String(p.nota||''),prec:+p.precision||0,i}:null}).filter(Boolean);
 const conSitio=()=>todos().filter(t=>puntos(t).length);
 const Repo={destino:null};
-const json=f=>fetch(f).then(r=>{if(!r.ok)throw new Error(f);return r.json()}).then(d=>Array.isArray(d)?d:[]).catch(()=>[]);
+const json=f=>fetch(f+'?v='+Date.now()).then(r=>{if(!r.ok)throw new Error(f);return r.json()}).then(d=>Array.isArray(d)?d:[]).catch(()=>[]);
 
 /* ---------- Curvas de nivel ---------- */
 fetch('datos/curvas.svg').then(r=>r.text()).then(t=>{
@@ -511,7 +517,7 @@ nuevaPartida();
 const Mapa={pendiente:null,listo:false,activo:false};
 {
   const U={uCurvas:{value:0},uBase:{value:0}};let anillos;
-  let renderer,scene,camera,controls,mesh,mat,tex,meta,hgt,W,H,cx,cy,exag=2,modo='orto',registrando=false,raf=0,sel=null,colores,box;
+  let renderer,scene,camera,controls,mesh,mat,tex,meta,hgt,W,H,cx,cy,exag=1,modo='orto',registrando=false,raf=0,sel=null,colores,box;
   const lienzo=$('#lienzo'),estado=$('#estado');
   const rampa=[[0,[45,106,79]],[.25,[116,168,87]],[.5,[227,213,138]],[.75,[201,139,75]],[1,[125,82,56]]];
   const color=t=>{for(let i=1;i<rampa.length;i++)if(t<=rampa[i][0]){const[a,ca]=rampa[i-1],[b,cb]=rampa[i],k=(t-a)/(b-a);return ca.map((v,j)=>(v+(cb[j]-v)*k)/255)}return rampa[4][1].map(v=>v/255)};
@@ -595,6 +601,7 @@ const Mapa={pendiente:null,listo:false,activo:false};
     const ls=conSitio();
     $('#lista-sitios').innerHTML=ls.length?ls.map(t=>`<li><button type="button" data-ir="${esc(t.id)}" data-p="0">${esc(t.titulo)}${puntos(t).length>1?` <span class="nota">· ${puntos(t).length} puntos</span>`:''}${t._borrador?' <span class="etq">Borrador</span>':''}</button></li>`).join('')
       :'<li class="nota">Aún no hay sitios de estudio con coordenadas. Usa “Registrar sitio” o agrega el campo <code>sitio</code> en <code>datos/trabajos.json</code>.</li>';
+    pintar2d();
     if(!Mapa.listo)return;
     const cont=$('#pines');cont.replaceChildren();pines=[];
     while(anillos.children.length){const o=anillos.children.pop();o.geometry.dispose();o.material.dispose()}
@@ -607,7 +614,7 @@ const Mapa={pendiente:null,listo:false,activo:false};
   function moverPines(){const w=lienzo.clientWidth,h=lienzo.clientHeight;for(const p of pines){pv.set(p.x,p.h*exag,p.z).project(camera);
     const vis=pv.z<1&&Math.abs(pv.x)<1.1&&Math.abs(pv.y)<1.1;p.el.style.display=vis?'':'none';if(vis)p.el.style.transform=`translate(${(pv.x+1)/2*w}px,${(1-pv.y)/2*h}px)`}}
   function ficha(id,pi=0){const t=todos().find(x=>x.id===id);if(!t)return;const ps=puntos(t),p=ps.find(x=>x.i==pi)||ps[0];if(!p)return;sel=id+'|'+p.i;
-    const[la,lo]=utm2ll(p.E,p.N),w=toWorld(p.E,p.N),h=alt(w.gi,w.gj);
+    const[la,lo]=utm2ll(p.E,p.N),w=meta&&hgt?toWorld(p.E,p.N):null,h=w?alt(w.gi,w.gj):null;
     const f=$('#ficha');f.hidden=false;
     f.innerHTML=`<strong>${esc(t.titulo)}</strong>${t.autores?`<p class="nota">${esc(t.autores)}${t.anio?' · '+esc(t.anio):''}</p>`:''}
       ${p.nombre?`<p><b>${esc(p.nombre)}</b>${ps.length>1?` <span class="nota">(${ps.indexOf(p)+1} de ${ps.length})</span>`:''}</p>`:''}${p.nota?`<p>${esc(p.nota)}</p>`:''}
@@ -642,12 +649,11 @@ const Mapa={pendiente:null,listo:false,activo:false};
     cv.addEventListener('pointerup',ev=>{if(!registrando||!arrastre)return;if(Math.hypot(ev.clientX-arrastre[0],ev.clientY-arrastre[1])>6)return;const p=tocar(ev);if(!p){$('#msg').textContent='Haz clic dentro del área con relieve.';return}abrirForm(p)});
     $('#pines').addEventListener('click',e=>{const b=e.target.closest('[data-ir]');if(b)ficha(b.dataset.ir,+b.dataset.p)});
   }
-  $('#lista-sitios').addEventListener('click',e=>{const b=e.target.closest('[data-ir]');if(b)irA(b.dataset.ir)});
+  $('#lista-sitios').addEventListener('click',e=>{const b=e.target.closest('[data-ir]');if(b){if(vista==='2d')irA2d(b.dataset.ir);else irA(b.dataset.ir)}});
   $('#ficha').addEventListener('click',e=>{const b=e.target.closest('[data-repo]');if(b){Repo.destino=b.dataset.repo;location.hash='repositorio'}});
 
   /* controles del panel */
   document.querySelectorAll('[data-modo]').forEach(b=>b.addEventListener('click',()=>{modo=b.dataset.modo;document.querySelectorAll('[data-modo]').forEach(x=>x.setAttribute('aria-pressed',x===b));if(mat)aplicarModo()}));
-  $('#exag').addEventListener('input',e=>{const nv=+e.target.value;$('#exag-v').textContent=fmt(nv,1)+'×';if(!mesh){exag=nv;return}const dy=controls.target.y*(nv/exag-1);exag=nv;mesh.scale.y=exag;controls.target.y+=dy;camera.position.y+=dy;moverPines()});
   $('#b-inicial').addEventListener('click',()=>Mapa.listo&&vistaInicial());
   $('#b-cenital').addEventListener('click',()=>Mapa.listo&&cenital());
   $('#b-curvas').addEventListener('click',e=>{U.uCurvas.value=U.uCurvas.value?0:1;e.currentTarget.setAttribute('aria-pressed',!!U.uCurvas.value)});
@@ -667,9 +673,31 @@ const Mapa={pendiente:null,listo:false,activo:false};
     const id='sitio-'+Date.now().toString(36);borradores.push({id,titulo:d.titulo.trim(),autores:d.autores.trim(),anio:d.anio?+d.anio:null,tipo:d.tipo,resumen:d.resumen.trim(),doi:d.doi.trim(),enlace:'',sitio:{E:Math.round(punto.E*10)/10,N:Math.round(punto.N*10)/10}});
     guardarBorr();dlg.close();$('#msg').textContent='Borrador guardado en este navegador. Usa “Copiar JSON” para publicarlo.';pintarSitios();pintarRepo();ficha(id)});
 
-  Mapa.mostrar=async()=>{Mapa.activo=true;if(!renderer&&!Mapa._ini){Mapa._ini=true;await iniciar();if(renderer)iniciarEventos()}
+  /* ---------- Ortofoto 2D (Leaflet) ---------- */
+  let vista='3d',m2=null,capa2=null;
+  async function iniciar2d(){if(m2)return;const mt=meta||await fetch('datos/terreno.json').then(r=>r.json());
+    const B=[[mt.sur,mt.oeste],[mt.norte,mt.este]];
+    m2=L.map('mapa2d',{crs:L.CRS.Simple,zoomSnap:.25,minZoom:-2,maxZoom:3,attributionControl:true});
+    const hd=!matchMedia('(pointer:coarse)').matches;
+    L.imageOverlay(hd?'datos/ortofoto_8192.jpg':'datos/ortofoto_4096.jpg',B).addTo(m2);
+    m2.attributionControl.setPrefix(false).addAttribution('Ortofoto: vuelo con dron 11/11/2026');
+    L.control.scale({imperial:false}).addTo(m2);
+    m2.fitBounds(B);m2.setMaxBounds(L.latLngBounds(B).pad(.3));capa2=L.layerGroup().addTo(m2);pintar2d()}
+  function pintar2d(){if(!capa2)return;capa2.clearLayers();
+    conSitio().forEach(t=>puntos(t).forEach(p=>{const ll=[p.N,p.E],et=p.nombre?`${t.titulo} · ${p.nombre}`:t.titulo;
+      if(p.prec>0)L.circle(ll,{radius:p.prec,color:'#ff6f59',weight:2,fillOpacity:.12,interactive:false}).addTo(capa2);
+      const mk=L.marker(ll,{icon:L.divIcon({className:'pin2d'+(sel===t.id+'|'+p.i?' sel':''),html:'<i></i>',iconSize:[0,0]}),title:et,keyboard:true}).addTo(capa2);
+      mk.bindTooltip(et,{direction:'top',offset:[14,-34]});mk.on('click',()=>ficha(t.id,p.i))}))}
+  function irA2d(id){const t=todos().find(x=>x.id===id);if(!t||!m2)return;const ps=puntos(t);if(!ps.length)return;
+    if(ps.length===1)m2.flyTo([ps[0].N,ps[0].E],1.5);else m2.flyToBounds(L.latLngBounds(ps.map(p=>[p.N,p.E])).pad(.3));ficha(id)}
+  async function ponerVista(v){vista=v;document.querySelectorAll('[data-vista]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.vista===v));
+    document.querySelectorAll('.solo3d').forEach(e=>e.hidden=v!=='3d');$('#lienzo').hidden=v!=='3d';$('#mapa2d').hidden=v!=='2d';
+    if(v==='2d'){cancelAnimationFrame(raf);await iniciar2d();m2.invalidateSize()}else if(renderer&&Mapa.activo){ajustar();cancelAnimationFrame(raf);bucle()}}
+  document.querySelectorAll('[data-vista]').forEach(b=>b.addEventListener('click',()=>ponerVista(b.dataset.vista)));
+  Mapa.mostrar=async()=>{if(vista==='2d'){Mapa.activo=true;await iniciar2d();m2.invalidateSize();if(Mapa.pendiente){const id=Mapa.pendiente;Mapa.pendiente=null;irA2d(id)}if(!renderer&&!Mapa._ini){Mapa._ini=true;await iniciar();if(renderer)iniciarEventos()}return}Mapa.activo=true;if(!renderer&&!Mapa._ini){Mapa._ini=true;await iniciar();if(renderer)iniciarEventos()}
     if(renderer&&Mapa.activo){ajustar();cancelAnimationFrame(raf);bucle();if(Mapa.pendiente)irA(Mapa.pendiente)}};
   Mapa.ocultar=()=>{Mapa.activo=false;cancelAnimationFrame(raf)};
+  Mapa.vista=()=>vista;
   Mapa.repintar=pintarSitios;
 }
 
