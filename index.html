@@ -112,6 +112,11 @@ input[type=range]{padding:0;border:0;accent-color:var(--coral);height:44px}
 #repo .anio{font:800 32px/1 "Barlow Semi Condensed",sans-serif;color:var(--turq)}
 #repo .tipo{display:block;font-size:13px;color:var(--mute);margin-top:6px}
 #repo p{margin:.5em 0 0;max-width:70ch}#repo .meta{font-size:14px;color:var(--mute)}
+#repo .galeria{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;margin-top:12px;padding-bottom:6px}
+#repo .galeria a{flex:none;width:150px;scroll-snap-align:start;text-decoration:none;color:var(--mute);font-size:12px}
+#repo .galeria img{width:150px;height:150px;object-fit:cover;border-radius:12px;display:block;margin-bottom:4px}
+#repo li.destacado{background:var(--t-sol);border-radius:14px;outline:3px solid var(--coral);outline-offset:6px;transition:background .6s}
+#ficha img{width:100%;border-radius:10px;margin-top:8px;display:block}
 .etq{display:inline-block;font:800 12px Barlow,sans-serif;border:2px dashed var(--coral);color:var(--link);border-radius:999px;padding:0 8px;margin-left:6px;vertical-align:3px}
 @media(max-width:600px){#repo li{grid-template-columns:minmax(0,1fr)}}
 details{border:2px solid var(--line);border-radius:14px;padding:12px 16px;margin-top:28px;background:var(--panel)}
@@ -185,7 +190,7 @@ dialog form{display:grid;gap:12px;padding:20px}
 <header><div class="wrap">
   <a class="marca" href="#inicio"><svg width="64" height="20" viewBox="0 0 270 84" fill="currentColor"><use href="#cacomixtle" width="270" height="84"/></svg><span><small>Bosque Escuela</small><b>El Cacomixtle</b></span></a>
   <nav aria-label="Menú principal">
-    <a href="#inicio">Inicio</a><a href="#mapa">Mapa 3D</a><a href="#repositorio">Repositorio</a><a href="#anuncios">Anuncios</a><a href="#kids" class="kids">Kids</a><a href="#contacto">Contacto</a>
+    <a href="#inicio">Inicio</a><a href="#mapa">Mapa 3D</a><a href="#repositorio">Repositorio</a><a href="#novedades">Novedades</a><a href="#kids" class="kids">Kids</a><a href="#contacto">Contacto</a>
   </nav>
 </div></header>
 
@@ -199,7 +204,7 @@ dialog form{display:grid;gap:12px;padding:20px}
         <span class="kicker">Bosque Escuela</span>
         <h1>El Cacomixtle</h1>
         <p class="lead">Un bosque para aprender, investigar y cuidar, camino a la Presa San José, en San Luis Potosí. Explóralo en 3D, conoce sus investigaciones y ven de visita con tu familia.</p>
-        <div class="acciones"><a class="btn pri" href="#mapa">Explorar el mapa 3D</a><a class="btn osc" href="#kids">Zona Kids</a><a class="btn" href="#anuncios">Anuncios</a></div>
+        <div class="acciones"><a class="btn pri" href="#mapa">Explorar el mapa 3D</a><a class="btn osc" href="#kids">Zona Kids</a><a class="btn" href="#novedades">Novedades</a></div>
       </div>
       <div class="curvas" id="curvas" aria-label="Curvas de nivel reales del Bosque Escuela"></div>
     </div>
@@ -297,14 +302,14 @@ dialog form{display:grid;gap:12px;padding:20px}
   </details>
 </div></section>
 
-<!-- ========== ANUNCIOS ========== -->
-<section id="v-anuncios" class="vista band" hidden><div class="wrap">
-  <h2>Anuncios</h2>
+<!-- ========== NOVEDADES ========== -->
+<section id="v-novedades" class="vista band" hidden><div class="wrap">
+  <h2>Novedades</h2>
   <p style="max-width:60ch">Visitas guiadas, convocatorias, avisos y novedades del Bosque Escuela El Cacomixtle.</p>
   <ul id="lista-anuncios"></ul>
   <details>
-    <summary>Cómo publicar un anuncio</summary>
-    <p>Agrega un registro al inicio de <code>datos/anuncios.json</code> (en GitHub: abre el archivo, pulsa el lápiz, edita y “Commit changes”). Los de fecha futura aparecen marcados como “Próximo”.</p>
+    <summary>Cómo publicar una novedad</summary>
+    <p>Agrega un registro al inicio de <code>datos/novedades.json</code> (en GitHub: abre el archivo, pulsa el lápiz, edita y “Commit changes”). Los de fecha futura aparecen marcados como “Próximo”.</p>
 <pre>{"id":"visita-diciembre","fecha":"2026-12-06","tipo":"Evento","titulo":"Visita guiada para familias",
  "texto":"Recorrido de 9:00 a 11:00 h. Cupo limitado.","enlace":"https://…"}</pre>
   </details>
@@ -421,7 +426,10 @@ let trabajos=[],borradores=[];
 try{borradores=JSON.parse(localStorage.getItem('be-borradores')||'[]')}catch(e){borradores=[]}
 const guardarBorr=()=>{try{localStorage.setItem('be-borradores',JSON.stringify(borradores))}catch(e){}};
 const todos=()=>[...trabajos,...borradores.map(b=>({...b,_borrador:true}))];
-const conSitio=()=>todos().filter(t=>sitioUTM(t.sitio));
+const fotoOK=f=>/^https?:\/\//.test(f)||/^[\w\-./]+\.(jpe?g|png|webp)$/i.test(f)&&!f.includes('..');
+const puntos=t=>(Array.isArray(t.sitios)?t.sitios:(t.sitio?[t.sitio]:[])).map((p,i)=>{const u=sitioUTM(p);return u?{E:u[0],N:u[1],nombre:String(p.nombre||''),foto:fotoOK(String(p.foto||''))?String(p.foto):'',video:/^[\w\-./]+\.mp4$/i.test(String(p.video||''))&&!String(p.video).includes('..')?String(p.video):'',nota:String(p.nota||''),i}:null}).filter(Boolean);
+const conSitio=()=>todos().filter(t=>puntos(t).length);
+const Repo={destino:null};
 const json=f=>fetch(f).then(r=>{if(!r.ok)throw new Error(f);return r.json()}).then(d=>Array.isArray(d)?d:[]).catch(()=>[]);
 
 /* ---------- Curvas de nivel ---------- */
@@ -434,12 +442,14 @@ fetch('datos/curvas.svg').then(r=>r.text()).then(t=>{
 }).catch(()=>{});
 
 /* ---------- Navegación ---------- */
-const VISTAS=['inicio','mapa','repositorio','anuncios','kids','contacto'];
-function ruta(){let v=location.hash.slice(1);if(v==='informacion')v='inicio';if(!VISTAS.includes(v))v='inicio';
+const VISTAS=['inicio','mapa','repositorio','novedades','kids','contacto'];
+function ruta(){let v=location.hash.slice(1);if(v==='informacion')v='inicio';if(v==='anuncios')v='novedades';if(!VISTAS.includes(v))v='inicio';
   VISTAS.forEach(n=>{$('#v-'+n).hidden=n!==v});
   document.querySelectorAll('nav a').forEach(a=>{if(a.getAttribute('href')==='#'+v)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current')});
   if(v==='mapa')Mapa.mostrar();else Mapa.ocultar();
-  window.scrollTo(0,0)}
+  window.scrollTo(0,0);
+  if(v==='repositorio'&&Repo.destino){const id=Repo.destino;Repo.destino=null;filtroTipo='Todos';$('#buscar').value='';pintarRepo();
+    const li=document.getElementById('t-'+id);if(li){li.classList.add('destacado');li.scrollIntoView({block:'center'});setTimeout(()=>li.classList.remove('destacado'),4000)}}}
 addEventListener('hashchange',ruta);
 
 /* ---------- Repositorio ---------- */
@@ -452,23 +462,25 @@ function pintarRepo(){
   $('#repo-resumen').textContent=`${lista.length} ${lista.length===1?'trabajo registrado':'trabajos registrados'} · ${conSitio().length} con sitio en el mapa`;
   $('#repo').innerHTML=vis.length?vis.map(t=>{const doi=t.doi?`<a href="https://doi.org/${encodeURI(String(t.doi).replace(/^https?:\/\/doi\.org\//,''))}">doi:${esc(t.doi)}</a>`:'';
     const enl=url(t.enlace)?`<a href="${url(t.enlace)}">Documento</a>`:'';
-    return `<li><div><span class="anio">${esc(t.anio||'s/f')}</span><span class="tipo">${esc(t.tipo||'')}</span></div>
+    return `<li id="t-${esc(t.id)}"><div><span class="anio">${esc(t.anio||'s/f')}</span><span class="tipo">${esc(t.tipo||'')}</span></div>
     <div><h3>${esc(t.titulo)}${t._borrador?'<span class="etq">Borrador local</span>':''}</h3>${t.autores?`<div class="meta">${esc(t.autores)}</div>`:''}${t.resumen?`<p>${esc(t.resumen)}</p>`:''}
-    ${doi||enl?`<p class="meta">${[doi,enl].filter(Boolean).join(' · ')}</p>`:''}</div>
-    <div>${sitioUTM(t.sitio)?`<button type="button" data-ver="${esc(t.id)}">Ver en el mapa</button>`:'<span class="nota">Todo el bosque</span>'}</div></li>`}).join('')
+    ${doi||enl?`<p class="meta">${[doi,enl].filter(Boolean).join(' · ')}</p>`:''}${galeria(t)}</div>
+    <div>${puntos(t).length?`<button type="button" data-ver="${esc(t.id)}">Ver en el mapa</button>${puntos(t).length>1?`<span class="nota" style="display:block;margin-top:6px">${puntos(t).length} puntos de muestreo</span>`:''}`:'<span class="nota">Todo el bosque</span>'}</div></li>`}).join('')
     :'<li><div></div><p>Ningún trabajo coincide con la búsqueda.</p><div></div></li>'}
 $('#buscar').addEventListener('input',pintarRepo);
 $('#chips').addEventListener('click',e=>{const b=e.target.closest('[data-tipo]');if(b){filtroTipo=b.dataset.tipo;pintarRepo()}});
 $('#repo').addEventListener('click',e=>{const b=e.target.closest('[data-ver]');if(b){Mapa.pendiente=b.dataset.ver;location.hash='mapa'}});
 
-/* ---------- Anuncios ---------- */
+function galeria(t){const fs=(Array.isArray(t.fotos)?t.fotos:[]).filter(f=>f&&fotoOK(String(f.src||'')));if(!fs.length)return'';
+  return `<div class="galeria">${fs.map(f=>`<a href="${esc(f.src)}"><img src="${esc(f.src)}" alt="${esc(f.pie||'Foto de campo')}" loading="lazy"><span>${esc(f.pie||'')}</span></a>`).join('')}</div>`}
+/* ---------- Novedades ---------- */
 const MESES=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
 function pintarAnuncios(lista){const hoy=new Date().toISOString().slice(0,10);
   const orden=[...lista].sort((a,b)=>String(b.fecha).localeCompare(String(a.fecha)));
   $('#lista-anuncios').innerHTML=orden.length?orden.map(a=>{const[y,m,d]=String(a.fecha||'').split('-');const tipo=String(a.tipo||'Aviso');
     return `<li><div class="fecha ${esc(tipo.replace(/\W/g,''))}"><b>${esc(+d||'')}</b>${esc(MESES[+m-1]||'')} ${esc(y||'')}</div>
     <div><span class="chip">${esc(tipo)}</span>${a.fecha>hoy?'<span class="chip prox">Próximo</span>':''}<h3>${esc(a.titulo)}</h3><p>${esc(a.texto)}</p>${url(a.enlace)?`<p><a href="${url(a.enlace)}">Más información</a></p>`:''}</div></li>`}).join('')
-    :'<li><p>Por ahora no hay anuncios. ¡Vuelve pronto!</p></li>'}
+    :'<li><p>Por ahora no hay novedades. ¡Vuelve pronto!</p></li>'}
 
 /* ---------- Kids ---------- */
 const ANIMALES={cacomixtle:{n:'Cacomixtle',vb:'-130 -80 270 84',dato:'Es nocturno y su cola tiene anillos. Es pariente del mapache, no de los gatos. ¡Este bosque lleva su nombre!'},
@@ -550,23 +562,30 @@ const Mapa={pendiente:null,listo:false,activo:false};
   const pv=new THREE.Vector3();let pines=[];
   function pintarSitios(){
     const ls=conSitio();
-    $('#lista-sitios').innerHTML=ls.length?ls.map(t=>`<li><button type="button" data-ir="${esc(t.id)}">${esc(t.titulo)}${t._borrador?' <span class="etq">Borrador</span>':''}</button></li>`).join('')
+    $('#lista-sitios').innerHTML=ls.length?ls.map(t=>`<li><button type="button" data-ir="${esc(t.id)}" data-p="0">${esc(t.titulo)}${puntos(t).length>1?` <span class="nota">· ${puntos(t).length} puntos</span>`:''}${t._borrador?' <span class="etq">Borrador</span>':''}</button></li>`).join('')
       :'<li class="nota">Aún no hay sitios de estudio con coordenadas. Usa “Registrar sitio” o agrega el campo <code>sitio</code> en <code>datos/trabajos.json</code>.</li>';
     if(!Mapa.listo)return;
-    const cont=$('#pines');cont.replaceChildren();pines=ls.map(t=>{const[E,N]=sitioUTM(t.sitio),w=toWorld(E,N),h=alt(w.gi,w.gj)??0;
-      const b=document.createElement('button');b.type='button';b.className='pin'+(t._borrador?' borrador':'')+(sel===t.id?' sel':'');b.dataset.ir=t.id;
-      b.innerHTML='<i></i><span></span>';b.querySelector('span').textContent=t.titulo;b.setAttribute('aria-label',t.titulo);cont.append(b);return{el:b,x:w.x,z:w.z,h}});
+    const cont=$('#pines');cont.replaceChildren();pines=[];
+    ls.forEach(t=>puntos(t).forEach(p=>{const w=toWorld(p.E,p.N),h=alt(w.gi,w.gj)??0,et=p.nombre?`${t.titulo} · ${p.nombre}`:t.titulo;
+      const b=document.createElement('button');b.type='button';b.className='pin'+(t._borrador?' borrador':'')+(sel===t.id+'|'+p.i?' sel':'');b.dataset.ir=t.id;b.dataset.p=p.i;
+      b.innerHTML='<i></i><span></span>';b.querySelector('span').textContent=et;b.setAttribute('aria-label',et);cont.append(b);pines.push({el:b,x:w.x,z:w.z,h})}));
     moverPines()}
   function moverPines(){const w=lienzo.clientWidth,h=lienzo.clientHeight;for(const p of pines){pv.set(p.x,p.h*exag,p.z).project(camera);
     const vis=pv.z<1&&Math.abs(pv.x)<1.1&&Math.abs(pv.y)<1.1;p.el.style.display=vis?'':'none';if(vis)p.el.style.transform=`translate(${(pv.x+1)/2*w}px,${(1-pv.y)/2*h}px)`}}
-  function ficha(id){const t=todos().find(x=>x.id===id);if(!t)return;sel=id;const[E,N]=sitioUTM(t.sitio),[la,lo]=utm2ll(E,N),w=toWorld(E,N),h=alt(w.gi,w.gj);
+  function ficha(id,pi=0){const t=todos().find(x=>x.id===id);if(!t)return;const ps=puntos(t),p=ps.find(x=>x.i==pi)||ps[0];if(!p)return;sel=id+'|'+p.i;
+    const[la,lo]=utm2ll(p.E,p.N),w=toWorld(p.E,p.N),h=alt(w.gi,w.gj);
     const f=$('#ficha');f.hidden=false;
-    f.innerHTML=`<strong>${esc(t.titulo)}</strong>${t.autores?`<p class="nota">${esc(t.autores)}${t.anio?' · '+esc(t.anio):''}</p>`:''}${t.resumen?`<p>${esc(t.resumen)}</p>`:''}
+    f.innerHTML=`<strong>${esc(t.titulo)}</strong>${t.autores?`<p class="nota">${esc(t.autores)}${t.anio?' · '+esc(t.anio):''}</p>`:''}
+      ${p.nombre?`<p><b>${esc(p.nombre)}</b>${ps.length>1?` <span class="nota">(${ps.indexOf(p)+1} de ${ps.length})</span>`:''}</p>`:''}${p.nota?`<p>${esc(p.nota)}</p>`:''}
+      ${p.video?`<video src="${esc(p.video)}" ${p.foto?`poster="${esc(p.foto)}"`:''} controls muted playsinline loop style="width:100%;border-radius:10px;margin-top:8px"></video>`:p.foto?`<img src="${esc(p.foto)}" alt="Foto del punto ${esc(p.nombre)}" loading="lazy">`:''}
       ${t.doi?`<p><a href="https://doi.org/${encodeURI(String(t.doi))}">doi:${esc(t.doi)}</a></p>`:''}
-      <p class="nota">E ${fmt(E)} · N ${fmt(N)} (UTM 14 N)<br>${la.toFixed(5)}°, ${lo.toFixed(5)}°${h!=null?` · ${fmt(meta.altitud_min+h)} m s.n.m.`:''}</p>`;
+      <p class="nota">E ${fmt(p.E)} · N ${fmt(p.N)} (UTM 14 N)<br>${la.toFixed(5)}°, ${lo.toFixed(5)}°${h!=null?` · ${fmt(meta.altitud_min+h)} m s.n.m.`:''}</p>
+      ${t._borrador?'':`<button type="button" class="btn pri" data-repo="${esc(t.id)}" style="margin-top:8px">Ver en el repositorio</button>`}`;
     pintarSitios()}
-  function irA(id){Mapa.pendiente=null;const t=todos().find(x=>x.id===id);if(!t||!Mapa.listo)return;const[E,N]=sitioUTM(t.sitio),w=toWorld(E,N),h=(alt(w.gi,w.gj)??0)*exag;
-    controls.target.set(w.x,h,w.z);camera.position.set(w.x-90,h+260,w.z+260);controls.autoRotate=false;$('#b-girar').setAttribute('aria-pressed','false');ficha(id)}
+  function irA(id,pi=0){Mapa.pendiente=null;const t=todos().find(x=>x.id===id);if(!t||!Mapa.listo)return;const ps=puntos(t);if(!ps.length)return;
+    let cx2=0,cz=0,hs=0,r=0;const ws=ps.map(p=>toWorld(p.E,p.N));ws.forEach(w=>{cx2+=w.x/ws.length;cz+=w.z/ws.length;hs+=(alt(w.gi,w.gj)??0)/ws.length});
+    ws.forEach(w=>{r=Math.max(r,Math.hypot(w.x-cx2,w.z-cz))});const d=Math.max(260,r*2.6),h=hs*exag;
+    controls.target.set(cx2,h,cz);camera.position.set(cx2-d*.35,h+d,cz+d);controls.autoRotate=false;$('#b-girar').setAttribute('aria-pressed','false');ficha(id,pi)}
 
   /* lectura de coordenadas bajo el cursor: marcha del rayo sobre la malla de alturas */
   const ray=new THREE.Raycaster(),nd=new THREE.Vector2(),tmp=new THREE.Vector3();
@@ -587,9 +606,10 @@ const Mapa={pendiente:null,listo:false,activo:false};
     cv.addEventListener('pointerleave',()=>lec.hidden=true);
     cv.addEventListener('pointerdown',ev=>arrastre=[ev.clientX,ev.clientY]);
     cv.addEventListener('pointerup',ev=>{if(!registrando||!arrastre)return;if(Math.hypot(ev.clientX-arrastre[0],ev.clientY-arrastre[1])>6)return;const p=tocar(ev);if(!p){$('#msg').textContent='Haz clic dentro del área con relieve.';return}abrirForm(p)});
-    $('#pines').addEventListener('click',e=>{const b=e.target.closest('[data-ir]');if(b)ficha(b.dataset.ir)});
+    $('#pines').addEventListener('click',e=>{const b=e.target.closest('[data-ir]');if(b)ficha(b.dataset.ir,+b.dataset.p)});
   }
   $('#lista-sitios').addEventListener('click',e=>{const b=e.target.closest('[data-ir]');if(b)irA(b.dataset.ir)});
+  $('#ficha').addEventListener('click',e=>{const b=e.target.closest('[data-repo]');if(b){Repo.destino=b.dataset.repo;location.hash='repositorio'}});
 
   /* controles del panel */
   document.querySelectorAll('[data-modo]').forEach(b=>b.addEventListener('click',()=>{modo=b.dataset.modo;document.querySelectorAll('[data-modo]').forEach(x=>x.setAttribute('aria-pressed',x===b));if(mat)aplicarModo()}));
@@ -619,7 +639,7 @@ const Mapa={pendiente:null,listo:false,activo:false};
 }
 
 json('datos/trabajos.json').then(d=>{trabajos=d}).finally(()=>{pintarRepo();Mapa.repintar()});
-json('datos/anuncios.json').then(pintarAnuncios);
+json('datos/novedades.json').then(pintarAnuncios);
 json('datos/kids.json').then(pintarKids);
 pintarRepo();Mapa.repintar();ruta();
 }

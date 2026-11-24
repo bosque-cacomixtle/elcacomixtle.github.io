@@ -1,3 +1,92 @@
 [
-{"id":"levantamiento-dron-2026-11-11","titulo":"Levantamiento fotogramétrico con dron del Bosque Escuela","autores":"","anio":2026,"tipo":"Datos y cartografía","resumen":"Vuelo del 11 de noviembre de 2026 (13:39–14:21 h) con cámara DJI FC3682: 298 fotografías, 297 reconstruidas, GSD promedio de 3.33 cm y 0.66 km² cubiertos. Procesado con ODX 3.8.5. Productos: ortofoto, modelo digital de superficie (DSM), nube de puntos LAS y modelo 3D texturizado (GLB). Georreferencia solo con GPS del dron: precisión absoluta CE90 de 0.96 m (horizontal) y LE90 de 5.03 m (vertical). Es la base del mapa 3D de este sitio.","doi":"","enlace":"","sitio":null}
+{
+"id": "hormigas-acarreadoras",
+"titulo": "Preferencias de hormigas acarreadoras en el Bosque Escuela El Cacomixtle",
+"autores": "Ramírez Carrizales, Armando Rayel",
+"anio": 2026,
+"tipo": "Investigación en curso",
+"resumen": "Estudio sobre las preferencias de las hormigas acarreadoras en el Bosque Escuela. Los puntos de observación se marcan en el mapa 3D a partir de fotografías georreferenciadas tomadas en campo.",
+"doi": "",
+"enlace": "",
+"sitios": [
+{
+"E": 290598.1,
+"N": 2450718.6,
+"nombre": "Hormiguero H1",
+"fecha": "2026-11-15",
+"nota": "Ubicación tomada del video de campo del 15 de noviembre de 2026 (GPS del iPhone, precisión horizontal reportada ±31 m). Las fotos de campo no conservaron su ubicación.",
+"video": "fotos/hormigas/h1.mp4",
+"foto": "fotos/hormigas/h1.jpg"
+}
+],
+"fotos": [
+{
+"src": "fotos/hormigas/IMG_7497.jpg",
+"pie": "IMG_7497"
+},
+{
+"src": "fotos/hormigas/IMG_7501.jpg",
+"pie": "IMG_7501"
+},
+{
+"src": "fotos/hormigas/IMG_7502.jpg",
+"pie": "IMG_7502"
+},
+{
+"src": "fotos/hormigas/IMG_7503.jpg",
+"pie": "IMG_7503"
+},
+{
+"src": "fotos/hormigas/IMG_7562.jpg",
+"pie": "IMG_7562"
+},
+{
+"src": "fotos/hormigas/IMG_7563.jpg",
+"pie": "IMG_7563"
+},
+{
+"src": "fotos/hormigas/IMG_7564.jpg",
+"pie": "IMG_7564"
+},
+{
+"src": "fotos/hormigas/IMG_7571.jpg",
+"pie": "IMG_7571"
+},
+{
+"src": "fotos/hormigas/IMG_7572.jpg",
+"pie": "IMG_7572"
+},
+{
+"src": "fotos/hormigas/IMG_7575.jpg",
+"pie": "IMG_7575"
+},
+{
+"src": "fotos/hormigas/IMG_7578.jpg",
+"pie": "IMG_7578"
+},
+{
+"src": "fotos/hormigas/IMG_8023.jpg",
+"pie": "IMG_8023"
+},
+{
+"src": "fotos/hormigas/IMG_8024.jpg",
+"pie": "IMG_8024"
+},
+{
+"src": "fotos/hormigas/IMG_8028.jpg",
+"pie": "IMG_8028"
+}
+]
+},
+{
+"id": "levantamiento-dron-2026-11-11",
+"titulo": "Levantamiento fotogramétrico con dron del Bosque Escuela",
+"autores": "",
+"anio": 2026,
+"tipo": "Datos y cartografía",
+"resumen": "Vuelo del 11 de noviembre de 2026 (13:39–14:21 h) con cámara DJI FC3682: 298 fotografías, 297 reconstruidas, GSD promedio de 3.33 cm y 0.66 km² cubiertos. Procesado con ODX 3.8.5. Productos: ortofoto, modelo digital de superficie (DSM), nube de puntos LAS y modelo 3D texturizado (GLB). Georreferencia solo con GPS del dron: precisión absoluta CE90 de 0.96 m (horizontal) y LE90 de 5.03 m (vertical). Es la base del mapa 3D de este sitio.",
+"doi": "",
+"enlace": "",
+"sitio": null
+}
 ]
