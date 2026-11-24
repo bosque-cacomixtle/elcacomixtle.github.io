@@ -1,5 +1,63 @@
 [
-{"id":"mapa-3d-en-linea","fecha":"2026-11-24","tipo":"Novedad","titulo":"Ya puedes explorar el bosque en 3D","texto":"Con el vuelo de dron del 11 de noviembre de 2026 armamos un modelo 3D del Bosque Escuela El Cacomixtle: gíralo, acércate y descubre su cañada desde cualquier ángulo. Entra a la sección Mapa 3D.","enlace":""},
-{"id":"anp-municipal","fecha":"2026-09-19","tipo":"Aviso","titulo":"Inicia el trámite para declararlo Área Natural Protegida municipal","texto":"El Cabildo de San Luis Potosí aprobó iniciar el trámite para reconocer al Bosque Escuela como Área Natural Protegida Municipal, un paso que podría abrir la puerta a una protección federal.","enlace":"https://planoinformativo.com/1170346/enrique-galindo-inaugura-bosque-escuela-cacomixtle"},
-{"id":"inauguracion","fecha":"2026-09-19","tipo":"Evento","titulo":"Inauguración del Bosque Escuela El Cacomixtle","texto":"El Ayuntamiento de San Luis Potosí inauguró el Bosque Escuela, coordinado por el IPICYT junto con el Municipio y el COPOCyT. Es un espacio para el conocimiento, la enseñanza y la conservación: se recorre por senderos, con la menor intervención posible.","enlace":"https://planoinformativo.com/1170346/enrique-galindo-inaugura-bosque-escuela-cacomixtle"}
+{
+"id": "limpieza-2026-11-15",
+"fecha": "2026-11-15",
+"tipo": "Evento",
+"titulo": "Jornada de limpieza del Bosque Escuela El Cacomixtle: 422 kg de basura recolectados",
+"texto": "El domingo 15 de noviembre, de 8:00 a 12:00 h, voluntarias y voluntarios se sumaron a la limpieza del Bosque Escuela, coordinada por el Laboratorio de Paisajes Antrópicos Sostenibles (LPAS) de la División de Ciencias Ambientales del IPICYT. Entre todos se recolectaron 422 kilos de basura: bolsas de residuos, cubetas, mangueras, láminas y escombro. Entre los hallazgos apareció un boleto de un concierto de 1999, recordatorio de cuánto tiempo puede permanecer la basura en un ecosistema. ¡Gracias a todas las personas que participaron!",
+"enlace": "",
+"destacado": "422 kg",
+"media": [
+{
+"src": "fotos/limpieza/basura-recolectada.jpg",
+"pie": "Basura recolectada durante la jornada"
+},
+{
+"src": "fotos/limpieza/voluntarios.jpg",
+"pie": "Voluntarios limpiando la cañada"
+},
+{
+"src": "fotos/limpieza/boleto-1999.jpg",
+"pie": "Boleto de 1999 encontrado entre la basura"
+},
+{
+"video": "fotos/limpieza/video-8067.mp4",
+"src": "fotos/limpieza/video-8067.jpg",
+"pie": "Recorrido por la zona de limpieza"
+},
+{
+"video": "fotos/limpieza/video-8077.mp4",
+"src": "fotos/limpieza/video-8077.jpg",
+"pie": "Arroyo y puente de piedra"
+},
+{
+"src": "fotos/limpieza/cartel.jpg",
+"pie": "Cartel de la convocatoria"
+}
+]
+},
+{
+"id": "mapa-3d-en-linea",
+"fecha": "2026-11-24",
+"tipo": "Novedad",
+"titulo": "Ya puedes explorar el bosque en 3D",
+"texto": "Con el vuelo de dron del 11 de noviembre de 2026 armamos un modelo 3D del Bosque Escuela El Cacomixtle: gíralo, acércate y descubre su cañada desde cualquier ángulo. Entra a la sección Mapa 3D.",
+"enlace": ""
+},
+{
+"id": "anp-municipal",
+"fecha": "2026-09-19",
+"tipo": "Aviso",
+"titulo": "Inicia el trámite para declararlo Área Natural Protegida municipal",
+"texto": "El Cabildo de San Luis Potosí aprobó iniciar el trámite para reconocer al Bosque Escuela como Área Natural Protegida Municipal, un paso que podría abrir la puerta a una protección federal.",
+"enlace": "https://planoinformativo.com/1170346/enrique-galindo-inaugura-bosque-escuela-cacomixtle"
+},
+{
+"id": "inauguracion",
+"fecha": "2026-09-19",
+"tipo": "Evento",
+"titulo": "Inauguración del Bosque Escuela El Cacomixtle",
+"texto": "El Ayuntamiento de San Luis Potosí inauguró el Bosque Escuela, coordinado por el IPICYT junto con el Municipio y el COPOCyT. Es un espacio para el conocimiento, la enseñanza y la conservación: se recorre por senderos, con la menor intervención posible.",
+"enlace": "https://planoinformativo.com/1170346/enrique-galindo-inaugura-bosque-escuela-cacomixtle"
+}
 ]
