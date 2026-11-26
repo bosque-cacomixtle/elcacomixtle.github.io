@@ -102,7 +102,13 @@ input[type=range]{padding:0;border:0;accent-color:var(--coral);height:44px}
 .rampa{height:10px;border-radius:5px;background:linear-gradient(90deg,#2d6a4f,#74a857,#e3d58a,#c98b4b,#7d5238)}
 .rampa+div{display:flex;justify-content:space-between;font-size:13px;color:var(--mute);font-variant-numeric:tabular-nums}
 #lista-sitios{list-style:none;margin:0;padding:0;display:grid;gap:6px}
-#lista-sitios button{width:100%;justify-content:flex-start;text-align:left;font-weight:600;line-height:1.25;padding:8px 12px;border-radius:12px}
+#lista-sitios .sitio-fila{display:flex;gap:8px;align-items:center}
+#lista-sitios .ver-estudio{width:22px;height:22px;flex:none;accent-color:var(--coral);padding:0}
+.interruptor{display:flex;align-items:center;gap:10px;font-weight:600;font-size:15px;margin:0 0 10px;cursor:pointer;min-height:44px}
+.interruptor input{appearance:none;width:46px;height:26px;border-radius:13px;background:var(--line);position:relative;flex:none;padding:0;border:0;cursor:pointer;transition:background .2s}
+.interruptor input::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 3px #0004;transition:left .2s}
+.interruptor input:checked{background:var(--turq)}.interruptor input:checked::after{left:23px}
+#lista-sitios button{flex:1;width:100%;justify-content:flex-start;text-align:left;font-weight:600;line-height:1.25;padding:8px 12px;border-radius:12px}
 #ficha{border:2px solid var(--coral);background:var(--bg);border-radius:14px;padding:12px}
 #ficha p{margin:.4em 0 0;font-size:15px}
 @media(max-width:820px){#v-mapa{grid-template-columns:minmax(0,1fr);height:auto}.lienzo{height:68vh;min-height:380px}aside{border-left:0;border-top:1px solid var(--line)}}
@@ -283,6 +289,7 @@ dialog form{display:grid;gap:12px;padding:20px}
     </div>
     <div>
       <h3>Sitios de estudio</h3>
+      <label class="interruptor"><input type="checkbox" id="ver-puntos" checked><span>Mostrar puntos de muestreo</span></label>
       <ul id="lista-sitios"></ul>
       <div id="ficha" hidden></div>
     </div>
@@ -589,15 +596,22 @@ const Mapa={pendiente:null,listo:false,activo:false};
 
   /* pines */
   const pv=new THREE.Vector3();let pines=[];
+  let verPuntos=true;const ocultos=new Set();
+  try{const g=JSON.parse(localStorage.getItem('be-visibilidad')||'{}');if(g.ver===false)verPuntos=false;(g.ocultos||[]).forEach(x=>ocultos.add(x))}catch(e){}
+  const guardarVis=()=>{try{localStorage.setItem('be-visibilidad',JSON.stringify({ver:verPuntos,ocultos:[...ocultos]}))}catch(e){}};
+  const visibles=()=>verPuntos?conSitio().filter(t=>!ocultos.has(t.id)):[];
+  $('#ver-puntos').checked=verPuntos;
+  $('#ver-puntos').addEventListener('change',e=>{verPuntos=e.target.checked;guardarVis();pintarSitios()});
+  $('#lista-sitios').addEventListener('change',e=>{const c=e.target.closest('.ver-estudio');if(!c)return;if(c.checked)ocultos.delete(c.dataset.id);else ocultos.add(c.dataset.id);guardarVis();pintarSitios()});
   function pintarSitios(){
     const ls=conSitio();
-    $('#lista-sitios').innerHTML=ls.length?ls.map(t=>`<li><button type="button" data-ir="${esc(t.id)}" data-p="0">${esc(t.titulo)}${puntos(t).length>1?` <span class="nota">· ${puntos(t).length} puntos</span>`:''}${t._borrador?' <span class="etq">Borrador</span>':''}</button></li>`).join('')
+    $('#lista-sitios').innerHTML=ls.length?ls.map(t=>`<li class="sitio-fila"><input type="checkbox" class="ver-estudio" data-id="${esc(t.id)}" ${ocultos.has(t.id)?'':'checked'} ${verPuntos?'':'disabled'} aria-label="Mostrar puntos de ${esc(t.titulo)}"><button type="button" data-ir="${esc(t.id)}" data-p="0">${esc(t.titulo)}${puntos(t).length>1?` <span class="nota">· ${puntos(t).length} puntos</span>`:''}${t._borrador?' <span class="etq">Borrador</span>':''}</button></li>`).join('')
       :'<li class="nota">Aún no hay sitios de estudio con coordenadas. Usa “Registrar sitio” o agrega el campo <code>sitio</code> en <code>datos/trabajos.json</code>.</li>';
     pintar2d();
     if(!Mapa.listo)return;
     const cont=$('#pines');cont.replaceChildren();pines=[];
     while(anillos.children.length){const o=anillos.children.pop();o.geometry.dispose();o.material.dispose()}
-    ls.forEach(t=>puntos(t).forEach(p=>{const w=toWorld(p.E,p.N),h=alt(w.gi,w.gj)??0,et=p.nombre?`${t.titulo} · ${p.nombre}`:t.titulo;
+    visibles().forEach(t=>puntos(t).forEach(p=>{const w=toWorld(p.E,p.N),h=alt(w.gi,w.gj)??0,et=p.nombre?`${t.titulo} · ${p.nombre}`:t.titulo;
       const b=document.createElement('button');b.type='button';b.className='pin'+(t._borrador?' borrador':'')+(sel===t.id+'|'+p.i?' sel':'');b.dataset.ir=t.id;b.dataset.p=p.i;
       b.innerHTML='<i></i><span></span>';b.querySelector('span').textContent=et;b.setAttribute('aria-label',et);cont.append(b);pines.push({el:b,x:w.x,z:w.z,h});
       if(p.prec>0){const v=[];let last=h;for(let k=0;k<=72;k++){const a=k/72*Math.PI*2,X=w.x+Math.cos(a)*p.prec,Z=w.z+Math.sin(a)*p.prec,hh=alt(X/cx+(W-1)/2,Z/cy+(H-1)/2);if(hh!=null)last=hh;v.push(X,last+.8,Z)}
@@ -676,7 +690,7 @@ const Mapa={pendiente:null,listo:false,activo:false};
     L.control.scale({imperial:false}).addTo(m2);
     m2.fitBounds(B);m2.setMaxBounds(L.latLngBounds(B).pad(.3));capa2=L.layerGroup().addTo(m2);pintar2d()}
   function pintar2d(){if(!capa2)return;capa2.clearLayers();
-    conSitio().forEach(t=>puntos(t).forEach(p=>{const ll=[p.N,p.E],et=p.nombre?`${t.titulo} · ${p.nombre}`:t.titulo;
+    visibles().forEach(t=>puntos(t).forEach(p=>{const ll=[p.N,p.E],et=p.nombre?`${t.titulo} · ${p.nombre}`:t.titulo;
       if(p.prec>0)L.circle(ll,{radius:p.prec,color:'#ff6f59',weight:2,fillOpacity:.12,interactive:false}).addTo(capa2);
       const mk=L.marker(ll,{icon:L.divIcon({className:'pin2d'+(sel===t.id+'|'+p.i?' sel':''),html:'<i></i>',iconSize:[0,0]}),title:et,keyboard:true}).addTo(capa2);
       mk.bindTooltip(et,{direction:'top',offset:[14,-34]});mk.on('click',()=>ficha(t.id,p.i))}))}
